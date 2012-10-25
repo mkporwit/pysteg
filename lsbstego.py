@@ -42,6 +42,6 @@ def listToText(msgList):
             ret += "[{0}]: {1}\n".format(base64.b64decode(encMsg), count)
     else:
         (encMsg, count) = msgList[0]
-        ret += "[{0}]\n".format(base64.b64decode(encMsg))
+        ret += "[{0}]".format(base64.b64decode(encMsg))
 
     return ret

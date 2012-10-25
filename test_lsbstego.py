@@ -13,14 +13,14 @@ class TestLsbStego(unittest.TestCase):
         encData = lsbstego.encode(data, self.msg, self.delim)
         decMsgList = lsbstego.decode(encData, self.delim)
         decMsg = lsbstego.listToText(decMsgList)
-        self.assertEqual(decMsg, "[{0}]\n".format(self.msg))
+        self.assertEqual(decMsg, "[{0}]".format(self.msg))
 
     def testEncodeAndDecodeOnRandom(self):
         data = numpy.random.randint(0, high=256, size=1000).astype(numpy.uint32)
         encData = lsbstego.encode(data, self.msg, self.delim)
         decMsgList = lsbstego.decode(encData, self.delim)
         decMsg = lsbstego.listToText(decMsgList)
-        self.assertEqual(decMsg, "[{0}]\n".format(self.msg))
+        self.assertEqual(decMsg, "[{0}]".format(self.msg))
 
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestLsbStego)
