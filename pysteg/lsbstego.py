@@ -39,9 +39,9 @@ def listToText(msgList):
     if(nElem > 1):
         ret += "Found {0} unique messages. Will print them all\n".format(nElem)
         for (encMsg, count) in msgList:
-            ret += "[{0}]: {1}\n".format(base64.b64decode(encMsg), count)
+            ret.join("[{0}]: {1}\n".format(base64.b64decode(encMsg), count))
     else:
         (encMsg, count) = msgList[0]
-        ret += "[{0}]\n".format(base64.b64decode(encMsg))
+        ret.join("[{0}]\n".format(base64.b64decode(encMsg)))
 
     return ret
