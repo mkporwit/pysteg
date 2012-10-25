@@ -18,8 +18,6 @@ def encode(img, args):
         print "Haar not implemented yet"
 
     data.shape = (dim)
-    import pdb
-    pdb.set_trace()
     return nib.Nifti1Image(data, img.get_affine(), img.get_header())
 
 
