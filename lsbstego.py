@@ -8,7 +8,7 @@ import collections
 def encode(data, msg, delim):
     encMsg = base64.b64encode(msg) + delim
     encMask = tb.text2uint8mask(encMsg)
-    if(data.size < encMsg.size):
+    if(data.size < len(encMsg)):
         raise StegoException.EncodeError("Data size [{0}] is too small to fit encoded message of size [{1}]".format(data.size, encMask.size))
 
     encData = mask.applyLSB(data, encMask)
@@ -28,10 +28,20 @@ def decode(data, delim):
     nElem = len(encMsgListCounted)
     if(nElem < 1):
         raise StegoException.DecodeError("No message to decode")
-    elif(nElem > 1):
-        print "Found {0} unique messages. Will print them all.".format(nElem)
-        for (encMsg, count) in encMsgListCounted:
-            print "[{0}]: {1}".format(base64.b64decode(encMsg), count)
+
+    return encMsgListCounted
+
+
+def listToText(msgList):
+    nElem = len(msgList)
+    ret = ""
+
+    if(nElem > 1):
+        ret += "Found {0} unique messages. Will print them all\n".format(nElem)
+        for (encMsg, count) in msgList:
+            ret += "[{0}]: {1}\n".format(base64.b64decode(encMsg), count)
     else:
-        (encMsg, count) = encMsgListCounted.most_common(1)
-        print "[{0}]".format(base64.b64decode(encMsg))
+        (encMsg, count) = msgList[0]
+        ret += "[{0}]\n".format(base64.b64decode(encMsg))
+
+    return ret

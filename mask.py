@@ -26,4 +26,4 @@ def applyLSB(data, mask):
 
 
 def extractLSB(data):
-    return data & 1
+    return (data & 1).astype(numpy.uint8)
