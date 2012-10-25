@@ -39,7 +39,7 @@ def main():
 
     subparsers = parser.add_subparsers(help='sub-command help')
     parser_encode = subparsers.add_parser('encode', help='encode help')
-    parser_encode.add_argument('imgfile', help='Image file')
+    parser_encode.add_argument('imgfile', help='Image file. Encoding will modify it.')
     parser_encode.add_argument('mode', type=str, choices=["lsb", "haar"], help='Encoding to use')
     parser_encode.add_argument('msg', help='Message to encode')
     parser_encode.set_defaults(op='encode')
