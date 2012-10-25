@@ -9,7 +9,7 @@ def encode(data, msg, delim):
     encMsg = base64.b64encode(msg) + delim
     encMask = tb.text2uint8mask(encMsg)
     if(data.size < len(encMsg)):
-        raise StegoException.EncodeError("Data size [{0}] is too small to fit encoded message of size [{1}]".format(data.size, encMask.size))
+        raise StegoException.EncodeError("Data size [{0}] is too small to fit encoded message of size [{1}]".format(data.size, len(encMask)))
 
     encData = mask.applyLSB(data, encMask)
 
