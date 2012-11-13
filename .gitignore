@@ -2,3 +2,4 @@
 build/
 *.nii.gz
 nidump
+*.dcm
