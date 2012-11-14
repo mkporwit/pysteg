@@ -6,29 +6,13 @@ import lsbstego as lsb
 import nibabel as nib
 import argparse
 import dicom
-import numpy
-
-
-def nifti2dicom(data):
-    data = numpy.swapaxes(data, 0, 1)
-    data = numpy.swapaxes(data, 1, 2)
-    data = numpy.swapaxes(data, 0, 1)
-    data = nib.orientations.flip_axis(data, axis=1)
-    return data
-
-
-def dicom2nifti(data):
-    data = nib.orientations.flip_axis(data, axis=1)
-    data = numpy.swapaxes(data, 0, 1)
-    data = numpy.swapaxes(data, 1, 2)
-    data = numpy.swapaxes(data, 0, 1)
-    return data
+import affine
 
 
 def encode(img, args):
     if(args.format == "nifti"):
         data = img.get_data()
-        data = nifti2dicom(data)
+        data = affine.nifti2dicom(data)
     elif(args.format == "dicom"):
         data = img.pixel_array
 
@@ -42,7 +26,7 @@ def encode(img, args):
 
     data.shape = (dim)
     if(args.format == "nifti"):
-        data = dicom2nifti(data)
+        data = affine.dicom2nifti(data)
         return nib.Nifti1Image(data, img.get_affine(), img.get_header())
     elif(args.format == "dicom"):
         img.PixelArray = data.tostring()
@@ -52,7 +36,7 @@ def encode(img, args):
 def decode(img, args):
     if(args.format == "nifti"):
         data = img.get_data()
-        data = nifti2dicom(data)
+        data = affine.nifti2dicom(data)
     elif(args.format == "dicom"):
         data = img.pixel_array
 
