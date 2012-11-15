@@ -7,7 +7,6 @@ import nibabel as nib
 import argparse
 import dicom
 #import affine
-import pystegcfg
 
 
 def encode(img, args):
@@ -21,7 +20,7 @@ def encode(img, args):
     data = data.ravel()
 
     if(args.mode == "lsb"):
-        data = lsb.encode(data, args.msg, delim=pystegcfg.delim)
+        data = lsb.encode(data, args.msg)
     elif(args.mode == "haar"):
         print "Haar not implemented yet"
         return img
@@ -46,7 +45,7 @@ def decode(img, args):
     data = data.ravel()
 
     if(args.mode == "lsb"):
-        msgDataList = lsb.decode(data, delim=";")
+        msgDataList = lsb.decode(data)
         return lsb.listToText(msgDataList)
     elif(args.mode == "haar"):
         return "Haar not implemented yet"
