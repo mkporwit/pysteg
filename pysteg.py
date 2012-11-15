@@ -6,13 +6,14 @@ import lsbstego as lsb
 import nibabel as nib
 import argparse
 import dicom
-import affine
+#import affine
+import pystegcfg
 
 
 def encode(img, args):
     if(args.format == "nifti"):
         data = img.get_data()
-        data = affine.nifti2dicom(data)
+#        data = affine.nifti2dicom(data)
     elif(args.format == "dicom"):
         data = img.pixel_array
 
@@ -20,13 +21,14 @@ def encode(img, args):
     data = data.ravel()
 
     if(args.mode == "lsb"):
-        data = lsb.encode(data, args.msg, delim=";")
+        data = lsb.encode(data, args.msg, delim=pystegcfg.delim)
     elif(args.mode == "haar"):
         print "Haar not implemented yet"
+        return img
 
     data.shape = (dim)
     if(args.format == "nifti"):
-        data = affine.dicom2nifti(data)
+#        data = affine.dicom2nifti(data)
         return nib.Nifti1Image(data, img.get_affine(), img.get_header())
     elif(args.format == "dicom"):
         img.PixelArray = data.tostring()
@@ -36,7 +38,7 @@ def encode(img, args):
 def decode(img, args):
     if(args.format == "nifti"):
         data = img.get_data()
-        data = affine.nifti2dicom(data)
+#        data = affine.nifti2dicom(data)
     elif(args.format == "dicom"):
         data = img.pixel_array
 
@@ -77,10 +79,15 @@ def main():
         img = nib.load(args.imgfile)
     elif(args.format == "dicom"):
         img = dicom.read_file(args.imgfile)
+        meta = img.file_meta
 
     if(args.op == 'encode'):
         img = encode(img, args)
-        nib.save(img, args.imgfile)
+        if(args.format == "nifti"):
+            nib.save(img, args.imgfile)
+        elif(args.format == "dicom"):
+            img.file_meta = meta
+            img.save_as(args.imgfile)
     elif(args.op == 'decode'):
         msg = decode(img, args)
         print msg

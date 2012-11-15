@@ -35,13 +35,23 @@ def decode(data, delim):
 def listToText(msgList):
     nElem = len(msgList)
     ret = ""
+    failedCount = 0
 
     if(nElem > 1):
         ret += "Found {0} unique messages. Will print them all\n".format(nElem)
         for (encMsg, count) in msgList:
-            ret += "[{0}]: {1}\n".format(base64.b64decode(encMsg), count)
-    else:
+            try:
+                ret += "[{0}]: {1}\n".format(base64.b64decode(encMsg), count)
+            except TypeError:
+                failedCount += 1
+    elif(nElem is 1):
         (encMsg, count) = msgList[0]
-        ret += "[{0}]".format(base64.b64decode(encMsg))
+        try:
+            ret += "[{0}]".format(base64.b64decode(encMsg))
+        except TypeError:
+                failedCount += 1
+
+    if failedCount > 0:
+        ret += "{0} of {1} failed to decode".format(failedCount, nElem)
 
     return ret
