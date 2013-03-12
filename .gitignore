@@ -3,3 +3,6 @@ build/
 *.nii.gz
 nidump
 *.dcm
+*.iml
+.idea/
+*.swp

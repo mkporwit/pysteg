@@ -10,44 +10,44 @@ import dicom
 
 
 def encode(img, args):
-    if(args.format == "nifti"):
+    if args.format == "nifti":
         data = img.get_data()
-#        data = affine.nifti2dicom(data)
-    elif(args.format == "dicom"):
+    #        data = affine.nifti2dicom(data)
+    elif args.format == "dicom":
         data = img.pixel_array
 
     dim = data.shape
     data = data.ravel()
 
-    if(args.mode == "lsb"):
+    if args.mode == "lsb":
         data = lsb.encode(data, args.msg)
-    elif(args.mode == "haar"):
+    elif (args.mode == "haar"):
         print "Haar not implemented yet"
         return img
 
     data.shape = (dim)
-    if(args.format == "nifti"):
-#        data = affine.dicom2nifti(data)
+    if args.format == "nifti":
+    #        data = affine.dicom2nifti(data)
         return nib.Nifti1Image(data, img.get_affine(), img.get_header())
-    elif(args.format == "dicom"):
+    elif args.format == "dicom":
         img.PixelArray = data.tostring()
         return img
 
 
 def decode(img, args):
-    if(args.format == "nifti"):
+    if (args.format == "nifti"):
         data = img.get_data()
-#        data = affine.nifti2dicom(data)
-    elif(args.format == "dicom"):
+    #        data = affine.nifti2dicom(data)
+    elif (args.format == "dicom"):
         data = img.pixel_array
 
     data = img.get_data()
     data = data.ravel()
 
-    if(args.mode == "lsb"):
+    if (args.mode == "lsb"):
         msgDataList = lsb.decode(data)
         return lsb.listToText(msgDataList)
-    elif(args.mode == "haar"):
+    elif (args.mode == "haar"):
         return "Haar not implemented yet"
 
 
@@ -74,20 +74,20 @@ def main():
         print "Can't find input file [{0}]".format(args.imgfile)
         return 2
 
-    if(args.format == "nifti"):
+    if (args.format == "nifti"):
         img = nib.load(args.imgfile)
-    elif(args.format == "dicom"):
+    elif (args.format == "dicom"):
         img = dicom.read_file(args.imgfile)
         meta = img.file_meta
 
-    if(args.op == 'encode'):
+    if (args.op == 'encode'):
         img = encode(img, args)
-        if(args.format == "nifti"):
+        if (args.format == "nifti"):
             nib.save(img, args.imgfile)
-        elif(args.format == "dicom"):
+        elif (args.format == "dicom"):
             img.file_meta = meta
             img.save_as(args.imgfile)
-    elif(args.op == 'decode'):
+    elif (args.op == 'decode'):
         msg = decode(img, args)
         print msg
 
