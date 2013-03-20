@@ -2,21 +2,34 @@ import unittest
 import lsbstego
 import numpy
 
-
 class TestLsbStego(unittest.TestCase):
     def setUp(self):
         self.msg = "It's a trap!"
 
-    def testEncodeAndDecode(self):
+    def testEncodeAndDecodeTile(self):
         data = numpy.zeros(1000, dtype=numpy.uint32)
-        encData = lsbstego.encode(data, self.msg)
+        encData = lsbstego.encode(data, self.msg, "tile")
         decMsgList = lsbstego.decode(encData)
         decMsg = lsbstego.listToText(decMsgList)
         self.assertEqual(decMsg, "[{0}]".format(self.msg))
 
-    def testEncodeAndDecodeOnRandom(self):
+    def testEncodeAndDecodeOnRandomTile(self):
         data = numpy.random.randint(0, high=256, size=1000).astype(numpy.uint32)
-        encData = lsbstego.encode(data, self.msg)
+        encData = lsbstego.encode(data, self.msg, "tile")
+        decMsgList = lsbstego.decode(encData)
+        decMsg = lsbstego.listToText(decMsgList)
+        self.assertEqual(decMsg, "[{0}]".format(self.msg))
+
+    def testEncodeAndDecodeNotile(self):
+        data = numpy.zeros(1000, dtype=numpy.uint32)
+        encData = lsbstego.encode(data, self.msg, "notile")
+        decMsgList = lsbstego.decode(encData)
+        decMsg = lsbstego.listToText(decMsgList)
+        self.assertEqual(decMsg, "[{0}]".format(self.msg))
+
+    def testEncodeAndDecodeOnRandomNotile(self):
+        data = numpy.random.randint(0, high=256, size=1000).astype(numpy.uint32)
+        encData = lsbstego.encode(data, self.msg, "notile")
         decMsgList = lsbstego.decode(encData)
         decMsg = lsbstego.listToText(decMsgList)
         self.assertEqual(decMsg, "[{0}]".format(self.msg))

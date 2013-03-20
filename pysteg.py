@@ -20,7 +20,7 @@ def encode(img, args):
     data = data.ravel()
 
     if args.mode == "lsb":
-        data = lsb.encode(data, args.msg)
+        data = lsb.encode(data, args.msg, args.tiling)
     elif (args.mode == "haar"):
         print "Haar not implemented yet"
         return img
@@ -59,6 +59,7 @@ def main():
     parser_encode.add_argument('imgfile', help='Image file. Encoding will modify it.')
     parser_encode.add_argument('format', type=str, choices=["nifti", "dicom"], help='Format of input file')
     parser_encode.add_argument('mode', type=str, choices=["lsb", "haar"], help='Encoding to use')
+    parser_encode.add_argument('tiling', type=str, choices=["tile", "notile"], help='Tile the message across the image or not')
     parser_encode.add_argument('msg', help='Message to encode')
     parser_encode.set_defaults(op='encode')
 

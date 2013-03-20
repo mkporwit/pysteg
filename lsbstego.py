@@ -6,7 +6,7 @@ import collections
 import pystegcfg
 
 
-def encode(data, msg):
+def encode(data, msg, tiling):
     if not pystegcfg.encoding in pystegcfg.encodingopts:
         raise ValueError("Encoding [{0}] is invalid. Can only be one of {1}".format(pystegcfg.encoding, pystegcfg.encodingopts))
 
@@ -19,7 +19,7 @@ def encode(data, msg):
     if(data.size < len(encMsg)):
         raise StegoException.EncodeError("Data size [{0}] is too small to fit encoded message of size [{1}]".format(data.size, len(encMask)))
 
-    encData = mask.applyLSB(data, encMask)
+    encData = mask.applyLSB(data, encMask, tiling)
 
     return encData
 
@@ -30,7 +30,13 @@ def decode(data):
 
     encMask = mask.extractLSB(data)
     encMsg = tb.uint8mask2text(encMask)
-    # Extract all instances of the encoded message from the encMsg  string
+    # Find the last occurrence of the delimiter
+    lastPos = encMsg.rfind(pystegcfg.delim)
+    if lastPos is -1:
+        raise StegoException.DecodeError("Could not find any message delimiters")
+
+    encMsg = encMsg[:lastPos]
+    # Extract all instances of the encoded message from the encMsg string
     encMsgList = encMsg.split(pystegcfg.delim)
     # remove any empty array elements
     encMsgList = filter(None, encMsgList)
